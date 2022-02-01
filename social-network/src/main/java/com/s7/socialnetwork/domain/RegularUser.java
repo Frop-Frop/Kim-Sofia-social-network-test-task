@@ -25,27 +25,27 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity {
+public class RegularUser extends AbstractEntity {
 
 	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@MapsId("user_id")
 	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
-	private Set<User> friends = new HashSet<>();
+	private Set<RegularUser> friends = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@MapsId("friend_id")
 	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "friend_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private Set<User> friendOf = new HashSet<>();
+	private Set<RegularUser> friendOf = new HashSet<>();
 
-	public User(Long id, String username, String password, String firstName, String lastName, Date birthday,
-			Set<User> friends, Set<User> friendOf) {
+	public RegularUser(Long id, String username, String password, String firstName, String lastName, Date birthday,
+			Set<RegularUser> friends, Set<RegularUser> friendOf) {
 		super(id);
 		this.username = username;
 		this.password = password;
@@ -56,16 +56,16 @@ public class User extends AbstractEntity {
 		this.friendOf = friendOf;
 	}
 
-	public boolean hasFriend(User friend) {
+	public boolean hasFriend(RegularUser friend) {
 		return friends.contains(friend);
 	}
 
-	public void addFriend(User friend) {
+	public void addFriend(RegularUser friend) {
 		friends.add(friend);
 		friend.friendOf.add(this);
 	}
 
-	public void removeFriend(User friend) {
+	public void removeFriend(RegularUser friend) {
 		friends.remove(friend);
 		friend.friendOf.remove(this);
 	}

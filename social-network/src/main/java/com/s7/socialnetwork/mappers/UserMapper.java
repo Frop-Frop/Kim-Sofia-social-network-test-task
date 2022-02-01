@@ -5,13 +5,13 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import com.s7.socialnetwork.domain.User;
+import com.s7.socialnetwork.domain.RegularUser;
 import com.s7.socialnetwork.models.UserDTO;
 
 @Component
 public class UserMapper {
 
-	public UserDTO userToUserDTO(User user) {
+	public UserDTO userToUserDTO(RegularUser user) {
 		if (user == null) {
 			return new UserDTO();
 		}
@@ -19,13 +19,13 @@ public class UserMapper {
 				user.getLastName(), user.getBirthday());
 	}
 
-	public User userDTOtoUser(UserDTO userDTO) {
+	public RegularUser userDTOtoUser(UserDTO userDTO) {
 		if (userDTO == null) {
-			return new User();
+			return new RegularUser();
 		}
-		Set<User> friends = new HashSet<>(); // add fetching from repository
-		Set<User> friendOf = new HashSet<>(); // add fetching from repository
-		User user = new User(userDTO.getId(), userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(),
+		Set<RegularUser> friends = new HashSet<>(); // add fetching from repository
+		Set<RegularUser> friendOf = new HashSet<>(); // add fetching from repository
+		RegularUser user = new RegularUser(userDTO.getId(), userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(),
 				userDTO.getLastName(), userDTO.getBirthday(), friends, friendOf);
 		return user;
 
