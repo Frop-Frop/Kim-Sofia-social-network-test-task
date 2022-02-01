@@ -49,7 +49,21 @@ public class Bootstrap implements CommandLineRunner {
 		}
 	}
 
-	public static Date randomDateBetween(Date from, Date until) {
+	private void makeFriends(RegularUser user) {
+
+		userRepository.findAll().stream().forEach(u -> {
+			RegularUser friend;
+			for (int i = 0; i < 3; i++) {
+				Long friendId = randomLong(user.getId());
+				friend = userRepository.findById(friendId).get();
+				if (!user.hasFriend(friend)) {
+					user.addFriend(friend);
+				}
+			}
+		});
+	}
+
+	private static Date randomDateBetween(Date from, Date until) {
 		long startMillis = from.getTime();
 		long endMillis = until.getTime();
 		long randomMillis = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
@@ -57,12 +71,20 @@ public class Bootstrap implements CommandLineRunner {
 		return new Date(randomMillis);
 	}
 
-	public static Date dateFor(int year, int month, int day) {
+	private static Date dateFor(int year, int month, int day) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.DAY_OF_MONTH, day);
 		return cal.getTime();
+	}
+
+	private static long randomLong(Long excludeNumber) {
+		long result = (long) ((Math.random() * (10 - 1)) + 1);
+		if (result == excludeNumber) {
+			result = randomLong(excludeNumber);
+		}
+		return result;
 	}
 
 }
