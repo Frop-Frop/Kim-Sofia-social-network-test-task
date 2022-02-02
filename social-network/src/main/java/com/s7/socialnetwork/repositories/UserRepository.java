@@ -21,10 +21,10 @@ public interface UserRepository extends JpaRepository<RegularUser, Long> {
 			+ " or lower(concat(u.last_name, ' ', u.first_name)) like lower(concat('%', :searchTerm, '%'))", nativeQuery = true)
 	List<RegularUser> search(@Param("searchTerm") String searchTerm);
 
-	@Query(value = "SELECT u.* FROM users u JOIN friends f on u.id = f.user_id WHERE f.user_id=:id", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM users u JOIN friends f on u.id = f.friend_id WHERE f.user_id=:id", nativeQuery = true)
 	List<RegularUser> findFriends(@Param("id") Long friendId);
 
-	@Query(value = "SELECT u.* FROM users u JOIN friends f on u.id = f.friend_id WHERE f.friend_id=:id", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM users u JOIN friends f on u.id = f.user_id WHERE f.friend_id=:id", nativeQuery = true)
 	List<RegularUser> findFriendOf(@Param("id") Long friendId);
 
 	@Query(value = "select count(*) from friends", nativeQuery = true)

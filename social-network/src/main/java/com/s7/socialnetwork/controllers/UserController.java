@@ -31,6 +31,16 @@ public class UserController {
 		return new ResponseEntity<UserListDTO>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
+	@GetMapping("{id}/friends")
+	public ResponseEntity<UserListDTO> getUserFriends(@PathVariable Long id) {
+		return new ResponseEntity<UserListDTO>(userService.getUserFriends(id), HttpStatus.OK);
+	}
+
+	@GetMapping("{id}/friend-of")
+	public ResponseEntity<UserListDTO> getUserFriendOf(@PathVariable Long id) {
+		return new ResponseEntity<UserListDTO>(userService.getUserFriendOf(id), HttpStatus.OK);
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
 		return new ResponseEntity<UserDTO>(userService.getUserById(id), HttpStatus.OK);

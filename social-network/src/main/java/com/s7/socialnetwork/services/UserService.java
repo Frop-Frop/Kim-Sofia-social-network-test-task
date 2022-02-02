@@ -27,6 +27,16 @@ public class UserService {
 				userRepository.findAll().stream().map(userMapper::userToUserDTO).collect(Collectors.toList()));
 	}
 
+	public UserListDTO getUserFriends(Long friendId) {
+		return new UserListDTO(userRepository.findFriends(friendId).stream().map(userMapper::userToUserDTO)
+				.collect(Collectors.toList()));
+	}
+
+	public UserListDTO getUserFriendOf(Long friendId) {
+		return new UserListDTO(userRepository.findFriendOf(friendId).stream().map(userMapper::userToUserDTO)
+				.collect(Collectors.toList()));
+	}
+
 	public UserDTO getUserById(Long id) {
 		return userRepository.findById(id).map(userMapper::userToUserDTO).orElseThrow(ResourceNotFoundException::new);
 	}
