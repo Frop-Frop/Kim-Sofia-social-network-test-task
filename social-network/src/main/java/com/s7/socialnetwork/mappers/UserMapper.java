@@ -23,7 +23,7 @@ public class UserMapper {
 			return new UserDTO();
 		}
 		return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.getFirstName(),
-				user.getLastName(), user.getBirthday());
+				user.getLastName(), user.getBirthday(), user.getRole(), user.getStatus());
 	}
 
 	public RegularUser userDTOtoUser(UserDTO userDTO) {
@@ -32,7 +32,7 @@ public class UserMapper {
 		}
 		RegularUser user = new RegularUser(userDTO.getId(), userDTO.getUsername(),
 				passwordEncoder.encode(userDTO.getPassword()), userDTO.getFirstName(), userDTO.getLastName(),
-				userDTO.getBirthday());
+				userDTO.getBirthday(), userDTO.getRole(), userDTO.getStatus());
 		return user;
 
 	}

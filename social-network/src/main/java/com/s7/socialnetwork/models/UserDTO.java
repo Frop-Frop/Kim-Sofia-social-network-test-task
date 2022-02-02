@@ -2,6 +2,12 @@ package com.s7.socialnetwork.models;
 
 import java.util.Date;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import com.s7.socialnetwork.domain.security.Role;
+import com.s7.socialnetwork.domain.security.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +23,9 @@ public class UserDTO {
 	private String firstName;
 	private String lastName;
 	private Date birthday;
+	@Enumerated(value = EnumType.STRING)
+	private Role role;
+	@Enumerated(value = EnumType.STRING)
+	private Status status;
 
 }

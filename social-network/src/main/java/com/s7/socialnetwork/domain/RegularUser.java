@@ -56,24 +56,29 @@ public class RegularUser extends AbstractEntity {
 	private Set<RegularUser> friendOf = new HashSet<>();
 
 	public RegularUser(Long id, String username, String password, String firstName, String lastName, Date birthday,
-			Set<RegularUser> friends, Set<RegularUser> friendOf) {
+			Role role, Status status, Set<RegularUser> friends, Set<RegularUser> friendOf) {
 		super(id);
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthday = birthday;
+		this.role = role;
+		this.status = status;
 		this.friends = friends;
 		this.friendOf = friendOf;
 	}
 
-	public RegularUser(Long id, String username, String password, String firstName, String lastName, Date birthday) {
+	public RegularUser(Long id, String username, String password, String firstName, String lastName, Date birthday,
+			Role role, Status status) {
 		super(id);
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthday = birthday;
+		this.role = role;
+		this.status = status;
 	}
 
 	public boolean hasFriend(RegularUser friend) {
