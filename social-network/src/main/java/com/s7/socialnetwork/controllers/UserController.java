@@ -1,5 +1,7 @@
 package com.s7.socialnetwork.controllers;
 
+import java.security.Principal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,15 +50,15 @@ public class UserController {
 	}
 
 	@GetMapping("friends/add/{id}")
-	public ResponseEntity<Void> addFriend(@PathVariable Long id) {
-		RegularUser loggedInUser = new RegularUser(); // add find current logged user here
+	public ResponseEntity<Void> addFriend(@PathVariable Long id, Principal principal) {
+		RegularUser loggedInUser = userService.getRegularUserByUsername(principal.getName());
 		userService.addFriend(loggedInUser, id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@GetMapping("friends/remove/{id}")
-	public ResponseEntity<Void> removeFriend(@PathVariable Long id) {
-		RegularUser loggedInUser = new RegularUser(); // add find current logged user here
+	public ResponseEntity<Void> removeFriend(@PathVariable Long id, Principal principal) {
+		RegularUser loggedInUser = userService.getRegularUserByUsername(principal.getName());
 		userService.addFriend(loggedInUser, id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

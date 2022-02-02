@@ -22,6 +22,14 @@ public class UserService {
 		this.userMapper = userMapper;
 	}
 
+	public RegularUser getRegularUserByUsername(String username) {
+		Optional<RegularUser> user = userRepository.findByUsername(username);
+		if (user.isEmpty()) {
+			throw new ResourceNotFoundException("User does not exist");
+		}
+		return user.get();
+	}
+
 	public UserListDTO getAllUsers() {
 		return new UserListDTO(
 				userRepository.findAll().stream().map(userMapper::userToUserDTO).collect(Collectors.toList()));
@@ -35,6 +43,7 @@ public class UserService {
 		Optional<RegularUser> optional = userRepository.findById(id);
 		if (optional.isPresent() && !loggedInUser.hasFriend(optional.get())) {
 			loggedInUser.addFriend(optional.get());
+			userRepository.save(loggedInUser);
 		}
 	}
 
@@ -42,6 +51,7 @@ public class UserService {
 		Optional<RegularUser> optional = userRepository.findById(id);
 		if (optional.isPresent() && loggedInUser.hasFriend(optional.get())) {
 			loggedInUser.removeFriend(optional.get());
+			userRepository.save(loggedInUser);
 		}
 	}
 
