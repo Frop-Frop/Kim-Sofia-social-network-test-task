@@ -1,7 +1,5 @@
 package com.s7.socialnetwork.mappers;
 
-import java.util.Set;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +30,9 @@ public class UserMapper {
 		if (userDTO == null) {
 			return new RegularUser();
 		}
-		Set<RegularUser> friends = (Set<RegularUser>) userRepository.findFriends(userDTO.getId());
-		Set<RegularUser> friendOf = (Set<RegularUser>) userRepository.findFriendOf(userDTO.getId());
 		RegularUser user = new RegularUser(userDTO.getId(), userDTO.getUsername(),
 				passwordEncoder.encode(userDTO.getPassword()), userDTO.getFirstName(), userDTO.getLastName(),
-				userDTO.getBirthday(), friends, friendOf);
+				userDTO.getBirthday());
 		return user;
 
 	}
