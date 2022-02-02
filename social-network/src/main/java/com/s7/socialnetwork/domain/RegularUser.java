@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -34,12 +35,12 @@ public class RegularUser extends AbstractEntity {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@MapsId("user_id")
 	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
 	private Set<RegularUser> friends = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@MapsId("friend_id")
 	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "friend_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<RegularUser> friendOf = new HashSet<>();
@@ -60,9 +61,12 @@ public class RegularUser extends AbstractEntity {
 		return friends.contains(friend);
 	}
 
+	public boolean isFriendOf(RegularUser friend) {
+		return friendOf.contains(friend);
+	}
+
 	public void addFriend(RegularUser friend) {
 		friends.add(friend);
-		friend.friendOf.add(this);
 	}
 
 	public void removeFriend(RegularUser friend) {

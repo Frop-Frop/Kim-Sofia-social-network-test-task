@@ -47,19 +47,23 @@ public class Bootstrap implements CommandLineRunner {
 
 			userRepository.save(user);
 		}
+		makeFriends();
 	}
 
-	private void makeFriends(RegularUser user) {
+	private void makeFriends() {
 
-		userRepository.findAll().stream().forEach(u -> {
+		userRepository.findAll().stream().forEach(user -> {
 			RegularUser friend;
 			for (int i = 0; i < 3; i++) {
 				Long friendId = randomLong(user.getId());
 				friend = userRepository.findById(friendId).get();
-				if (!user.hasFriend(friend)) {
+				if (!user.hasFriend(friend) && !friend.isFriendOf(user)) {
 					user.addFriend(friend);
+					userRepository.save(friend);
 				}
+
 			}
+			userRepository.save(user);
 		});
 	}
 
