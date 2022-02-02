@@ -27,6 +27,29 @@ public class UserService {
 				userRepository.findAll().stream().map(userMapper::userToUserDTO).collect(Collectors.toList()));
 	}
 
+	public UserDTO getUserById(Long id) {
+		return userRepository.findById(id).map(userMapper::userToUserDTO).orElseThrow(ResourceNotFoundException::new);
+	}
+
+	public void addFriend(RegularUser loggedInUser, Long id) {
+		Optional<RegularUser> optional = userRepository.findById(id);
+		if (optional.isPresent() && !loggedInUser.hasFriend(optional.get())) {
+			loggedInUser.addFriend(optional.get());
+		}
+	}
+
+	public void removeFriend(RegularUser loggedInUser, Long id) {
+		Optional<RegularUser> optional = userRepository.findById(id);
+		if (optional.isPresent() && loggedInUser.hasFriend(optional.get())) {
+			loggedInUser.removeFriend(optional.get());
+		}
+	}
+
+	public UserListDTO getUsersMatchingName(String searchTerm) {
+		return new UserListDTO(
+				userRepository.search(searchTerm).stream().map(userMapper::userToUserDTO).collect(Collectors.toList()));
+	}
+
 	public UserListDTO getUserFriends(Long friendId) {
 		return new UserListDTO(userRepository.findFriends(friendId).stream().map(userMapper::userToUserDTO)
 				.collect(Collectors.toList()));
@@ -35,10 +58,6 @@ public class UserService {
 	public UserListDTO getUserFriendOf(Long friendId) {
 		return new UserListDTO(userRepository.findFriendOf(friendId).stream().map(userMapper::userToUserDTO)
 				.collect(Collectors.toList()));
-	}
-
-	public UserDTO getUserById(Long id) {
-		return userRepository.findById(id).map(userMapper::userToUserDTO).orElseThrow(ResourceNotFoundException::new);
 	}
 
 	public UserDTO createNewUser(UserDTO userDTO) {

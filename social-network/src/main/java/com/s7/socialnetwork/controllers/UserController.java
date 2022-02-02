@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.s7.socialnetwork.domain.RegularUser;
 import com.s7.socialnetwork.models.UserDTO;
 import com.s7.socialnetwork.models.UserListDTO;
 import com.s7.socialnetwork.services.UserService;
@@ -31,6 +32,11 @@ public class UserController {
 		return new ResponseEntity<UserListDTO>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
+	@GetMapping("search/{searchTearm}")
+	public ResponseEntity<UserListDTO> getUsersMatchingName(@PathVariable String searchTearm) {
+		return new ResponseEntity<UserListDTO>(userService.getUsersMatchingName(searchTearm), HttpStatus.OK);
+	}
+
 	@GetMapping("{id}/friends")
 	public ResponseEntity<UserListDTO> getUserFriends(@PathVariable Long id) {
 		return new ResponseEntity<UserListDTO>(userService.getUserFriends(id), HttpStatus.OK);
@@ -39,6 +45,20 @@ public class UserController {
 	@GetMapping("{id}/friend-of")
 	public ResponseEntity<UserListDTO> getUserFriendOf(@PathVariable Long id) {
 		return new ResponseEntity<UserListDTO>(userService.getUserFriendOf(id), HttpStatus.OK);
+	}
+
+	@GetMapping("friends/add/{id}")
+	public ResponseEntity<Void> addFriend(@PathVariable Long id) {
+		RegularUser loggedInUser = new RegularUser(); // add find current logged user here
+		userService.addFriend(loggedInUser, id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@GetMapping("friends/remove/{id}")
+	public ResponseEntity<Void> removeFriend(@PathVariable Long id) {
+		RegularUser loggedInUser = new RegularUser(); // add find current logged user here
+		userService.addFriend(loggedInUser, id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@GetMapping("{id}")
