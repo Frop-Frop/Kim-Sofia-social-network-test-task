@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -14,6 +16,9 @@ import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.s7.socialnetwork.domain.security.Role;
+import com.s7.socialnetwork.domain.security.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +39,11 @@ public class RegularUser extends AbstractEntity {
 	private String lastName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
+
+	@Enumerated(value = EnumType.STRING)
+	private Role role;
+	@Enumerated(value = EnumType.STRING)
+	private Status status;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@MapsId("user_id")
