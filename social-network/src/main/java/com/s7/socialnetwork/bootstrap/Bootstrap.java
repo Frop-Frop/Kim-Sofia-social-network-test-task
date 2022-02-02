@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.s7.socialnetwork.domain.RegularUser;
+import com.s7.socialnetwork.domain.security.Role;
+import com.s7.socialnetwork.domain.security.Status;
 import com.s7.socialnetwork.repositories.UserRepository;
 
 @Component
@@ -17,8 +20,11 @@ public class Bootstrap implements CommandLineRunner {
 
 	private final UserRepository userRepository;
 
-	public Bootstrap(UserRepository userRepository) {
+	private final PasswordEncoder passwordEncoder;
+
+	public Bootstrap(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -32,14 +38,16 @@ public class Bootstrap implements CommandLineRunner {
 		List<String> firstNames = Arrays.asList("Marylin", "Ivy", "Duke", "Derrek", "Marcus", "Lynna", "Sandor",
 				"Dimitry", "Ernest", "Elsworth");
 		List<String> lastNames = Arrays.asList("Bett", "Spieck", "Mabee", "Schuck", "Roderick", "Briatt", "Skipping",
-				"Wadlow", "Ragat", "Elsworth Greger");
+				"Wadlow", "Ragat", "Greger");
 		List<String> passwords = Arrays.asList("MayThe4thBeWithYou", "NVJ45-fd", "gGj440_12a", "JNnvk*ikf", "Rick4Roll",
 				"jKLr--hj", "HSFHf67j", "uusqms", "kmhdfgn", "password");
 
 		RegularUser user;
 		for (int i = 0; i < 10; i++) {
 			user = new RegularUser();
-			user.setPassword(passwords.get(i)); // implement encoder here
+			user.setPassword(passwordEncoder.encode(passwords.get(i)));
+			user.setStatus(Status.ACTIVE);
+			user.setRole(Role.REGULAR_USER);
 			user.setFirstName(firstNames.get(i));
 			user.setLastName(lastNames.get(i));
 			user.setUsername(user.getFirstName() + "_" + user.getLastName());
