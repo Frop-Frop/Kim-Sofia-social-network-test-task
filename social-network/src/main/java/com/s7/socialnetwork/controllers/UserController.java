@@ -56,18 +56,18 @@ public class UserController {
 
 	@GetMapping("friends/add/{id}")
 	@PreAuthorize("hasAuthority('act')")
-	public ResponseEntity<Void> addFriend(@PathVariable Long id, Principal principal) {
+	public ResponseEntity<UserDTO> addFriend(@PathVariable Long id, Principal principal) {
 		RegularUser loggedInUser = userService.getRegularUserByUsername(principal.getName());
-		userService.addFriend(loggedInUser, id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		UserDTO userDTO = userService.addFriend(loggedInUser, id);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 
 	@GetMapping("friends/remove/{id}")
 	@PreAuthorize("hasAuthority('act')")
-	public ResponseEntity<Void> removeFriend(@PathVariable Long id, Principal principal) {
+	public ResponseEntity<UserDTO> removeFriend(@PathVariable Long id, Principal principal) {
 		RegularUser loggedInUser = userService.getRegularUserByUsername(principal.getName());
-		userService.addFriend(loggedInUser, id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		UserDTO userDTO = userService.removeFriend(loggedInUser, id);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 
 	@GetMapping("{id}")

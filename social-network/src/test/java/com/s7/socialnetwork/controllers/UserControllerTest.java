@@ -21,12 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.s7.socialnetwork.domain.RegularUser;
 import com.s7.socialnetwork.domain.security.Role;
 import com.s7.socialnetwork.domain.security.Status;
-import com.s7.socialnetwork.mappers.UserMapper;
 import com.s7.socialnetwork.models.UserDTO;
 import com.s7.socialnetwork.models.UserListDTO;
-import com.s7.socialnetwork.repositories.UserRepository;
 import com.s7.socialnetwork.services.ResourceNotFoundException;
 import com.s7.socialnetwork.services.UserService;
 
@@ -35,12 +34,6 @@ class UserControllerTest {
 
 	@MockBean
 	UserService userService;
-
-	@MockBean
-	UserMapper userMapper;
-
-	@MockBean
-	UserRepository userRepository;
 
 	@Autowired
 	UserController userController;
@@ -109,12 +102,30 @@ class UserControllerTest {
 
 	}
 
+	@WithMockUser(username = "Marylin_Bett", authorities = "act")
+	@Test
 	void addFriendTest() throws Exception {
-
+		UserDTO userDTO = new UserDTO(2l, "username2", "password2", "John2", "Doe2", new Date(), Role.REGULAR_USER,
+				Status.ACTIVE);
+		RegularUser user = new RegularUser(1l, "username", "password", "John", "Doe", new Date(), Role.REGULAR_USER,
+				Status.ACTIVE);
+		when(userService.getRegularUserByUsername("username")).thenReturn(user);
+		when(userService.addFriend(user, 2l)).thenReturn(userDTO);
+		mockMvc.perform(get("/social-network/friends/add/2").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
-	void removeFriendTest() {
-
+	@WithMockUser(username = "Marylin_Bett", authorities = "act")
+	@Test
+	void removeFriendTest() throws Exception {
+		UserDTO userDTO = new UserDTO(2l, "username2", "password2", "John2", "Doe2", new Date(), Role.REGULAR_USER,
+				Status.ACTIVE);
+		RegularUser user = new RegularUser(1l, "username", "password", "John", "Doe", new Date(), Role.REGULAR_USER,
+				Status.ACTIVE);
+		when(userService.getRegularUserByUsername("username")).thenReturn(user);
+		when(userService.removeFriend(user, 2l)).thenReturn(userDTO);
+		mockMvc.perform(get("/social-network/friends/remove/2").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@WithMockUser(username = "Marylin_Bett", authorities = "act")

@@ -39,20 +39,24 @@ public class UserService {
 		return userRepository.findById(id).map(userMapper::userToUserDTO).orElseThrow(ResourceNotFoundException::new);
 	}
 
-	public void addFriend(RegularUser loggedInUser, Long id) {
+	public UserDTO addFriend(RegularUser loggedInUser, Long id) {
 		Optional<RegularUser> optional = userRepository.findById(id);
 		if (optional.isPresent() && !loggedInUser.hasFriend(optional.get())) {
 			loggedInUser.addFriend(optional.get());
 			userRepository.save(loggedInUser);
+			return userMapper.userToUserDTO(optional.get());
 		}
+		return userMapper.userToUserDTO(new RegularUser());
 	}
 
-	public void removeFriend(RegularUser loggedInUser, Long id) {
+	public UserDTO removeFriend(RegularUser loggedInUser, Long id) {
 		Optional<RegularUser> optional = userRepository.findById(id);
 		if (optional.isPresent() && loggedInUser.hasFriend(optional.get())) {
 			loggedInUser.removeFriend(optional.get());
 			userRepository.save(loggedInUser);
+			return userMapper.userToUserDTO(optional.get());
 		}
+		return userMapper.userToUserDTO(new RegularUser());
 	}
 
 	public UserListDTO getUsersMatchingName(String searchTerm) {
