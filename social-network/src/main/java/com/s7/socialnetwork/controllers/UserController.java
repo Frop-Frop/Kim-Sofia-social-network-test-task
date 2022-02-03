@@ -20,6 +20,11 @@ import com.s7.socialnetwork.models.UserDTO;
 import com.s7.socialnetwork.models.UserListDTO;
 import com.s7.socialnetwork.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "User controller", description = "User related operations")
 @RestController
 @RequestMapping("social-network/")
 public class UserController {
@@ -30,30 +35,35 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	@Operation(summary = "Get list of all users", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserListDTO> getAllUsers() {
 		return new ResponseEntity<UserListDTO>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Find users with name matching searchTerm", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("search/{searchTearm}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserListDTO> getUsersMatchingName(@PathVariable String searchTearm) {
 		return new ResponseEntity<UserListDTO>(userService.getUsersMatchingName(searchTearm), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Get list of user's friends", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("{id}/friends")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserListDTO> getUserFriends(@PathVariable Long id) {
 		return new ResponseEntity<UserListDTO>(userService.getUserFriends(id), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Get list of users who are friends od user", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("{id}/friend-of")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserListDTO> getUserFriendOf(@PathVariable Long id) {
 		return new ResponseEntity<UserListDTO>(userService.getUserFriendOf(id), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Adds user in friends of current logged user", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("friends/add/{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserDTO> addFriend(@PathVariable Long id, Principal principal) {
@@ -62,6 +72,7 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Gemoves user from friends of current logged user", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("friends/remove/{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserDTO> removeFriend(@PathVariable Long id, Principal principal) {
@@ -70,29 +81,34 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Get user by id", security = @SecurityRequirement(name = "basicAuth"))
 	@GetMapping("{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
 		return new ResponseEntity<UserDTO>(userService.getUserById(id), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Update user by userDTO", security = @SecurityRequirement(name = "basicAuth"))
 	@PutMapping("{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable Long id) {
 		return new ResponseEntity<UserDTO>(userService.saveUserByDTO(id, userDTO), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Patch user by userDTO", security = @SecurityRequirement(name = "basicAuth"))
 	@PatchMapping("{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<UserDTO> patchCustomer(@RequestBody UserDTO userDTO, @PathVariable Long id) {
 		return new ResponseEntity<UserDTO>(userService.patchUser(id, userDTO), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Create new user by userDTO")
 	@PostMapping("create-user")
 	public ResponseEntity<UserDTO> createNewUser(@RequestBody UserDTO userDTO) {
 		return new ResponseEntity<UserDTO>(userService.createNewUser(userDTO), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Delete user by id", security = @SecurityRequirement(name = "basicAuth"))
 	@DeleteMapping("{id}")
 	@PreAuthorize("hasAuthority('act')")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
