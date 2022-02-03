@@ -111,8 +111,10 @@ public class UserService {
 	}
 
 	public void deleteById(Long id) {
-		RegularUser user = userRepository.getById(id);
-		userRepository.delete(user);
+		Optional<RegularUser> user = userRepository.findById(id);
+		if (user.isPresent()) {
+			userRepository.delete(user.get());
+		}
 	}
 
 }
