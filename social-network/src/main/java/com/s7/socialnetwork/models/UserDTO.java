@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.s7.socialnetwork.domain.security.Role;
 import com.s7.socialnetwork.domain.security.Status;
 
@@ -22,6 +24,7 @@ public class UserDTO {
 	private String password;
 	private String firstName;
 	private String lastName;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 	@Enumerated(value = EnumType.STRING)
 	private Role role;
