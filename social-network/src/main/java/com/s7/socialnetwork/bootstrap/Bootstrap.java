@@ -4,15 +4,21 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.s7.socialnetwork.domain.Post;
 import com.s7.socialnetwork.domain.RegularUser;
 import com.s7.socialnetwork.domain.security.Role;
 import com.s7.socialnetwork.domain.security.Status;
+import com.s7.socialnetwork.repositories.PostRepository;
 import com.s7.socialnetwork.repositories.UserRepository;
 
 @Component
@@ -22,15 +28,25 @@ public class Bootstrap implements CommandLineRunner {
 
 	private final PasswordEncoder passwordEncoder;
 
-	public Bootstrap(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	private final PostRepository postRepository;
+
+	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
+
+	public Bootstrap(UserRepository userRepository, PasswordEncoder passwordEncoder, PostRepository postRepository) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.postRepository = postRepository;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		if (userRepository.count() == 0l) {
 			loadUsers();
+			log.debug("Users loaded");
+		}
+		if (postRepository.count() == 0l) {
+			loadPosts();
+			log.debug("Users loaded");
 		}
 	}
 
@@ -56,6 +72,27 @@ public class Bootstrap implements CommandLineRunner {
 			userRepository.save(user);
 		}
 		makeFriends();
+	}
+
+	private void loadPosts() {
+		List<String> postContent = Arrays.asList("Hello", "Lorem ipsum dolor sit amet",
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit", "Lorem ipsum", "Lorem ipsum dolor",
+				"Leo in vitae turpis massa sed elementum tempus", "Vel eros donec ac odio.",
+				"Porta non pulvinar neque laoreet suspendisse interdum", "Elementum nibh tellus", "Turpis egestas sed");
+		userRepository.findAll().stream().forEach(user -> {
+			Set<Post> posts = postContent.stream().map(string -> {
+				Post post = new Post();
+				post = new Post();
+				post.setPostContent(string);
+				post.setLastUpdate(new Date());
+				post = postRepository.save(post);
+				post.setUser(user);
+				return post;
+			}).collect(Collectors.toSet());
+			user.setPosts(posts);
+			userRepository.save(user);
+		});
+
 	}
 
 	private void makeFriends() {

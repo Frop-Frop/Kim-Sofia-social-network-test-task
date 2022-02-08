@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<RegularUser, Long> {
 	@Query(value = "SELECT u.* FROM users u JOIN friends f on u.id = f.user_id WHERE f.friend_id=:id", nativeQuery = true)
 	List<RegularUser> findFriendOf(@Param("id") Long friendId);
 
-	@Query(value = "select count(*) from friends", nativeQuery = true)
+	@Query(value = "SELECT count(*) from friends", nativeQuery = true)
 	Long countFriends();
 
 }
